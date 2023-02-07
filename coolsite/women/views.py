@@ -6,3 +6,9 @@ def index(request):
 
 def categories(request):
     return HttpResponse("<h1>Статьи по категориям</h1>")
+
+def home(request):
+    return render(request, 'home.html')
+
+def error_404(request, exeption):
+    return render(request, '404.html')
