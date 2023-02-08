@@ -1,14 +1,20 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.shortcuts import render, redirect
+
 
 def index(request):
     return HttpResponse("Страница приложения women.")
 
-def categories(request):
-    return HttpResponse("<h1>Статьи по категориям</h1>")
+def categories(request, catid):
+    if(request.POST):
+        print(request.POST)
+    return HttpResponse(f"<h1>Статьи по категориям</h1><p>{catid}</p>")
 
-def home(request):
-    return render(request, 'home.html')
+def archive(request, year):
+    if int(year) > 2022:
+        return redirect('home', permanent=True)
 
-def error_404(request, exeption):
-    return render(request, '404.html')
+    return HttpResponse(f"<h1>Архив по годам</h1><p>{year}</p>")
+
+def pageNotFound(request, exception):
+    return HttpResponseNotFound('<h1>Страница не найдена 404</h1>')
