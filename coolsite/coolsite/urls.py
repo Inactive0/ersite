@@ -25,3 +25,6 @@ urlpatterns = [
 ]
 
 handler404 = pageNotFound
+handler403 = pageForbidden
+handler400 = pageBadRequest
+handler500 = pageInternalServerError
