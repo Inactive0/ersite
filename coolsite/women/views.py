@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.handlers.wsgi import WSGIRequest
+from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseForbidden, HttpResponseBadRequest, \
     HttpResponseServerError
 from django.urls import reverse_lazy
@@ -37,7 +38,12 @@ class JustHome(DataMixin, ListView):
 
 
 def about(request):
-    return render(request, 'women/about.html', {'menu': menu, 'title': 'О сайте'})
+    contact_list = Women.objects.all()
+    paginator = Paginator(contact_list, 3)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'women/about.html', {'page_obj': page_obj, 'menu': menu, 'title': 'О сайте'})
 
 class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
