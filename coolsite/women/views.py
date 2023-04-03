@@ -148,3 +148,13 @@ def pageInternalServerError(request: WSGIRequest):
     elif request.path.startswith("/women/"):
         return redirect("women:error", error_code=500)
     return defaults.server_error(request)
+
+class RegisterUser(DataMixin, CreateView):
+    form_class = RegisterUserForm
+    template_name = 'women/register.html'
+    success_url = reverse_lazy('login')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Регистрация")
+        return dict(list(context.items()) + list(c_def.items()))
