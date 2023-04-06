@@ -23,6 +23,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('captcha/', include('captcha.urls')),
     path('', include('women.urls')),  # Кароче осы жереде nwomen барго соны если что озгертуге болады просто women
 ]
 
