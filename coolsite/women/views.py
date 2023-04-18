@@ -10,9 +10,11 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import defaults
+from rest_framework import generics
 
 from .forms import *
 from .models import *
+from .serializers import JustSerializer
 from .utils import *
 
 class JustHome(DataMixin, ListView):
@@ -197,3 +199,7 @@ class LoginUser(DataMixin, LoginView):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+class JustAPIView(generics.ListAPIView):
+    queryset = Women.objects.all()
+    serializer_class = JustSerializer
