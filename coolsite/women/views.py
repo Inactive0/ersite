@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.handlers.wsgi import WSGIRequest
 from django.core.paginator import Paginator
+from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseForbidden, HttpResponseBadRequest, \
     HttpResponseServerError
 from django.urls import reverse_lazy
@@ -11,6 +12,8 @@ from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import defaults
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .forms import *
 from .models import *
@@ -200,6 +203,23 @@ def logout_user(request):
     logout(request)
     return redirect('login')
 
-class JustAPIView(generics.ListAPIView):
-    queryset = Women.objects.all()
-    serializer_class = JustSerializer
+class JustAPIView(APIView):
+    def get(self, request):
+        w = Women.objects.all()
+        return Response({'posts': JustSerializer(w, many=True).data})
+
+    def post(self, request):
+        serializer = JustSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        post_new = Women.objects.create(
+            title=request.data['title'],
+            content=request.data['content'],
+            cat_id=request.data['cat_id']
+        )
+        return Response({'post': JustSerializer(post_new).data})
+
+
+# class JustAPIView(generics.ListAPIView):
+#     queryset = Women.objects.all()
+#     serializer_class = JustSerializer
